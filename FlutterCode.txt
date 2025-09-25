@@ -1,0 +1,107 @@
+// main.dart
+// Simple Flutter travel app demo: Flights, Hotels, Packages, Booking & Expenses
+// Run: flutter create my_app -> replace lib/main.dart with this file
+
+
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+
+void main() {
+runApp(TravelApp());
+}
+
+
+class TravelApp extends StatelessWidget {
+@override
+Widget build(BuildContext context) {
+return MaterialApp(
+title: 'Travel Buddy',
+theme: ThemeData(primarySwatch: Colors.indigo),
+home: HomePage(),
+);
+}
+}
+
+
+// ----------------- Mock Models -----------------
+class Flight {
+final String id;
+final String airline;
+final String from;
+final String to;
+final DateTime depart;
+final double price;
+Flight({required this.id, required this.airline, required this.from, required this.to, required this.depart, required this.price});
+}
+
+
+class Hotel {
+final String id;
+final String name;
+final String city;
+final double pricePerNight;
+final double rating;
+Hotel({required this.id, required this.name, required this.city, required this.pricePerNight, required this.rating});
+}
+
+
+class PackageItem {
+final String id;
+final String title;
+final String desc;
+final double price;
+PackageItem({required this.id, required this.title, required this.desc, required this.price});
+}
+
+
+class Booking {
+final String id;
+final String type; // flight/hotel/package
+final String title;
+final double amount;
+final DateTime date;
+Booking({required this.id, required this.type, required this.title, required this.amount, required this.date});
+}
+
+
+// ----------------- Sample Data -----------------
+final List<Flight> sampleFlights = List.generate(5, (i) => Flight(
+id: 'F${i+1}',
+airline: ['Indigo', 'Air India', 'SpiceJet', 'Vistara', 'GoAir'][i%5],
+from: ['Trivandrum', 'Bengaluru', 'Chennai', 'Mumbai', 'Kolkata'][i%5],
+to: ['Chennai', 'Delhi', 'Goa', 'Hyderabad', 'Pune'][i%5],
+depart: DateTime.now().add(Duration(days: i+1, hours: 6)),
+price: 2000 + i*1500.0,
+));
+
+
+final List<Hotel> sampleHotels = List.generate(5, (i) => Hotel(
+id: 'H${i+1}',
+name: ['The Bay', 'Grand Inn', 'LakeView', 'CityLodge', 'ComfortStay'][i%5],
+city: ['Chennai','Bengaluru','Goa','Kochi','Pune'][i%5],
+pricePerNight: 1500 + i*800.0,
+rating: 3.5 + (i%3)*0.5,
+));
+
+
+final List<PackageItem> samplePackages = [
+PackageItem(id: 'P1', title: 'Chennai Weekend', desc: '2N/3D Chennai + city tour', price: 8000),
+PackageItem(id: 'P2', title: 'Goa Beach Break', desc: '3N/4D Goa with water sports', price: 12000),
+PackageItem(id: 'P3', title: 'Kerala Backwaters', desc: 'Houseboat + Ayurveda', price: 15000),
+];
+
+
+// ----------------- Global In-Memory Bookings -----------------
+class InMemoryStore extends ChangeNotifier {
+final List<Booking> _bookings = [];
+
+
+List<Booking> get bookings => List.unmodifiable(_bookings);
+
+
+void addBooking(Booking b) {
+_bookings.add(b);
+notifyListeners();
+}
+// ----------------- End of File -----------------
